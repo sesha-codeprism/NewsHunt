@@ -1,0 +1,68 @@
+{
+  "name": "project",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "androidBundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
+    "iosBundle": "react-native bundle --entry-file index.js --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios"
+  },
+  "dependencies": {
+    "@react-native-community/async-storage": "^1.10.0",
+    "@react-native-community/masked-view": "^0.1.10",
+    "axios": "^0.19.2",
+    "hermesvm": "^0.1.1",
+    "i": "^0.3.6",
+    "jsc-android": "^241213.1.0",
+    "lottie-react-native": "^3.3.2",
+    "moment": "^2.25.1",
+    "moment-timezone": "^0.5.28",
+    "npm": "^6.14.4",
+    "react": "16.11.0",
+    "react-native": "0.62.2",
+    "react-native-device-info": "^5.5.6",
+    "react-native-fit-image": "^1.5.5",
+    "react-native-gesture-handler": "^1.6.1",
+    "react-native-reanimated": "^1.8.0",
+    "react-native-safe-area-context": "^0.7.3",
+    "react-native-screens": "^2.7.0",
+    "react-native-simple-toast": "^1.1.2",
+    "react-navigation": "^4.3.9",
+    "react-navigation-drawer": "^2.4.13",
+    "react-navigation-stack": "^2.4.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.6.2",
+    "@babel/runtime": "^7.6.2",
+    "@react-native-community/eslint-config": "^1.0.0",
+    "@types/jest": "^24.0.24",
+    "@types/moment-timezone": "^0.5.13",
+    "@types/react-native": "^0.62.0",
+    "@types/react-test-renderer": "16.9.2",
+    "@typescript-eslint/eslint-plugin": "^2.27.0",
+    "@typescript-eslint/parser": "^2.27.0",
+    "babel-jest": "^24.9.0",
+    "eslint": "^6.5.1",
+    "jest": "^24.9.0",
+    "jetifier": "^1.6.5",
+    "metro-react-native-babel-preset": "^0.58.0",
+    "prettier": "^2.0.4",
+    "react-test-renderer": "16.11.0",
+    "typescript": "^3.8.3"
+  },
+  "jest": {
+    "preset": "react-native",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  }
+}
