@@ -103,17 +103,20 @@ export default class SignUpScreen extends React.Component<
       upass: password,
       uphone: phone,
     };
+    SimpleToast.show("Signup called....Signing you up", SimpleToast.LONG);
+    GLOBALS.activityIndicator.show();
     API.userSignUp(payload)
       .then((data) => {
-        if (data.status === 200) {
-          GLOBALS.store.userLoggedIn = true;
-          updateStore(JSON.stringify(GLOBALS.store));
-          this.props.navigation.navigate('App');
-        } else {
-          SimpleToast.show(`${data.status}`, SimpleToast.LONG);
-        }
+        GLOBALS.activityIndicator.hide();
+        SimpleToast.show("Sign up Success..Taking you to the app", SimpleToast.LONG);
+        GLOBALS.store.userLoggedIn = true;
+        updateStore(JSON.stringify(GLOBALS.store));
+        this.props.navigation.navigate('App')
       })
-      .catch((err) => onCatch(err, 'signUp'));
+      .catch((err) => {
+        SimpleToast.show(`Signup failed due to ${err}.`, SimpleToast.LONG)
+        onCatch(err, 'signUp');
+      });
   };
 
   public render() {
@@ -150,7 +153,6 @@ export default class SignUpScreen extends React.Component<
                       selectionColor={globalColors.primary}
                       returnKeyType="next"
                       returnKeyLabel="next"
-                      autoFocus
                     />
                     <TextInput
                       ref={this.emailTextInput}
@@ -204,7 +206,6 @@ export default class SignUpScreen extends React.Component<
                         this.onSignUP();
                       }}
                       selectionColor={globalColors.primary}
-                      autoFocus
                     />
 
                     {/* <View style={styles.boxControl}>

@@ -8,7 +8,11 @@ import {
   ScrollView,
 } from 'react-native';
 import {NavigationStackProp} from 'react-navigation-stack';
-import {NavigationRoute, NavigationParams} from 'react-navigation';
+import {
+  NavigationRoute,
+  NavigationParams,
+  SafeAreaView,
+} from 'react-navigation';
 import {NavigationStackScreenProps} from 'react-navigation-stack';
 import {globalColors} from '../../utils/Colors';
 import {ImageAssets} from '../../assets/images';
@@ -56,9 +60,8 @@ export default class HomeScreen extends React.Component<
   };
 
   public render() {
-    console.log(this.state.newsData);
     return (
-      <GoSafe>
+      <GoSafe hideStatusBar>
         <View style={styles.main}>
           <View style={styles.header}>
             <TouchableOpacity
@@ -71,11 +74,11 @@ export default class HomeScreen extends React.Component<
             <Text style={styles.headerText}>News Hunt</Text>
           </View>
           <ScrollView
-            snapToInterval={height * 1}
+           snapToOffsets={[height]}
             scrollEnabled={true}
-            decelerationRate="normal"
-            snapToAlignment="center"
-            showsVerticalScrollIndicator={false}>
+            scrollEventThrottle={21}
+            showsVerticalScrollIndicator={false}
+            overScrollMode="never">
             {this.state.newsData.map((item, index) => {
               return (
                 <View key={`Index${index}`} style={styles.pagingCard}>

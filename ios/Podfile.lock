@@ -74,6 +74,11 @@ PODS:
   - OpenSSL-Universal (1.0.2.19):
     - OpenSSL-Universal/Static (= 1.0.2.19)
   - OpenSSL-Universal/Static (1.0.2.19)
+  - Permission-Camera (2.1.4):
+    - RNPermissions
+  - Permission-Microphone (2.1.4):
+    - RNPermissions
+  - QBImagePickerController (3.4.0)
   - RCTRequired (0.62.2)
   - RCTTypeSafety (0.62.2):
     - FBLazyVector (= 0.62.2)
@@ -237,6 +242,14 @@ PODS:
     - React-cxxreact (= 0.62.2)
     - React-jsi (= 0.62.2)
   - React-jsinspector (0.62.2)
+  - react-native-camera (3.24.2):
+    - React
+    - react-native-camera/RCT (= 3.24.2)
+    - react-native-camera/RN (= 3.24.2)
+  - react-native-camera/RCT (3.24.2):
+    - React
+  - react-native-camera/RN (3.24.2):
+    - React
   - react-native-safe-area-context (0.7.3):
     - React
   - react-native-simple-toast (1.1.2):
@@ -301,18 +314,32 @@ PODS:
     - React-cxxreact (= 0.62.2)
     - React-jsi (= 0.62.2)
     - ReactCommon/callinvoker (= 0.62.2)
+  - ReactNativeLocalization (2.1.6):
+    - React
+  - RNAudio (4.3.0):
+    - React
+  - RNAudioRecorderPlayer (2.5.1):
+    - React
   - RNCAsyncStorage (1.10.0):
     - React
   - RNCMaskedView (0.1.10):
     - React
-  - RNDeviceInfo (5.5.6):
+  - RNCustomizedImagePicker (0.1.11):
+    - QBImagePickerController
+    - React-Core
+    - React-RCTImage
+    - RSKImageCropper
+  - RNDeviceInfo (5.5.7):
     - React
   - RNGestureHandler (1.6.1):
+    - React
+  - RNPermissions (2.1.4):
     - React
   - RNReanimated (1.8.0):
     - React
   - RNScreens (2.7.0):
     - React
+  - RSKImageCropper (2.2.3)
   - Toast (4.0.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -344,6 +371,9 @@ DEPENDENCIES:
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - lottie-react-native (from `../node_modules/lottie-react-native`)
+  - Permission-Camera (from `../node_modules/react-native-permissions/ios/Camera.podspec`)
+  - Permission-Microphone (from `../node_modules/react-native-permissions/ios/Microphone.podspec`)
+  - QBImagePickerController (from `../node_modules/react-native-customized-image-picker/ios/QBImagePicker/QBImagePickerController.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
   - React (from `../node_modules/react-native/`)
@@ -355,6 +385,7 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
+  - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-simple-toast (from `../node_modules/react-native-simple-toast`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -368,12 +399,18 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - ReactCommon/callinvoker (from `../node_modules/react-native/ReactCommon`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - ReactNativeLocalization (from `../node_modules/react-native-localization`)
+  - RNAudio (from `../node_modules/react-native-audio`)
+  - RNAudioRecorderPlayer (from `../node_modules/react-native-audio-recorder-player`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
+  - RNCustomizedImagePicker (from `../node_modules/react-native-customized-image-picker`)
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RSKImageCropper
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -390,6 +427,7 @@ SPEC REPOS:
     - FlipperKit
     - lottie-ios
     - OpenSSL-Universal
+    - RSKImageCropper
     - Toast
     - YogaKit
 
@@ -406,6 +444,12 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   lottie-react-native:
     :path: "../node_modules/lottie-react-native"
+  Permission-Camera:
+    :path: "../node_modules/react-native-permissions/ios/Camera.podspec"
+  Permission-Microphone:
+    :path: "../node_modules/react-native-permissions/ios/Microphone.podspec"
+  QBImagePickerController:
+    :path: "../node_modules/react-native-customized-image-picker/ios/QBImagePicker/QBImagePickerController.podspec"
   RCTRequired:
     :path: "../node_modules/react-native/Libraries/RCTRequired"
   RCTTypeSafety:
@@ -424,6 +468,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
+  react-native-camera:
+    :path: "../node_modules/react-native-camera"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-simple-toast:
@@ -448,14 +494,24 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/Vibration"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  ReactNativeLocalization:
+    :path: "../node_modules/react-native-localization"
+  RNAudio:
+    :path: "../node_modules/react-native-audio"
+  RNAudioRecorderPlayer:
+    :path: "../node_modules/react-native-audio-recorder-player"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-community/async-storage"
   RNCMaskedView:
     :path: "../node_modules/@react-native-community/masked-view"
+  RNCustomizedImagePicker:
+    :path: "../node_modules/react-native-customized-image-picker"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNPermissions:
+    :path: "../node_modules/react-native-permissions"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -482,6 +538,9 @@ SPEC CHECKSUMS:
   lottie-ios: 48fac6be217c76937e36e340e2d09cf7b10b7f5f
   lottie-react-native: 2a1a82bb326ae51331a5520de0cf706733c6db69
   OpenSSL-Universal: 8b48cc0d10c1b2923617dfe5c178aa9ed2689355
+  Permission-Camera: 3ed116545ee8806cd706bca0e1a9a2c3cd36c6bd
+  Permission-Microphone: 903ab30bd006cb00f646d5a7622c6647f36a8940
+  QBImagePickerController: d54cf93db6decf26baf6ed3472f336ef35cae022
   RCTRequired: cec6a34b3ac8a9915c37e7e4ad3aa74726ce4035
   RCTTypeSafety: 93006131180074cffa227a1075802c89a49dd4ce
   React: 29a8b1a02bd764fb7644ef04019270849b9a7ac3
@@ -491,6 +550,7 @@ SPEC CHECKSUMS:
   React-jsi: b6dc94a6a12ff98e8877287a0b7620d365201161
   React-jsiexecutor: 1540d1c01bb493ae3124ed83351b1b6a155db7da
   React-jsinspector: 512e560d0e985d0e8c479a54a4e5c147a9c83493
+  react-native-camera: 7fb00ae42060f6c367b50cba598726e9c1ebbfa6
   react-native-safe-area-context: 8260e5157617df4b72865f44006797f895b2ada7
   react-native-simple-toast: a3a8e9033a549c11741debe875e54698cc4c0dd7
   React-RCTActionSheet: f41ea8a811aac770e0cc6e0ad6b270c644ea8b7c
@@ -503,16 +563,22 @@ SPEC CHECKSUMS:
   React-RCTText: fae545b10cfdb3d247c36c56f61a94cfd6dba41d
   React-RCTVibration: 4356114dbcba4ce66991096e51a66e61eda51256
   ReactCommon: ed4e11d27609d571e7eee8b65548efc191116eb3
+  ReactNativeLocalization: 9abfb1717d6c6f2e3a4e444c4402d52acbf784cc
+  RNAudio: cae2991f2dccb75163f260b60da8051717b959fa
+  RNAudioRecorderPlayer: 2802fce3cfd4b8acecfaeccf19ace6b145506172
   RNCAsyncStorage: b34d2399d3e25db01d5b881949b503bd3c224d57
   RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
-  RNDeviceInfo: c3ea4a4d4547740c548cdd1e5a78f9b04e524688
+  RNCustomizedImagePicker: 0311b7bd61302b112cb6f1c9179d1105b475d0cc
+  RNDeviceInfo: 498ccbf8b1361fe858581e3c1193ecee1a031e62
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
+  RNPermissions: 8ca17fd6c822eea589fe84709d9426e05cc39c39
   RNReanimated: 955cf4068714003d2f1a6e2bae3fb1118f359aff
   RNScreens: cf198f915f8a2bf163de94ca9f5bfc8d326c3706
+  RSKImageCropper: a446db0e8444a036b34f3c43db01b2373baa4b2a
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   Yoga: 3ebccbdd559724312790e7742142d062476b698e
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 50d32062eaa2ff6313e9c4cc1f7a47b42d7a2dbe
+PODFILE CHECKSUM: 08b540bf69481f852c7aee9ec79213c9bcf5d4c8
 
 COCOAPODS: 1.8.4

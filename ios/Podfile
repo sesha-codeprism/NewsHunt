@@ -44,8 +44,13 @@ def flipper_post_install(installer)
   end
 end
 
-target 'Project' do
-  # Pods for Project
+target 'NewsHunt' do
+  # Pods for NewsHunt
+  permissions_path = '../node_modules/react-native-permissions/ios'
+  pod 'QBImagePickerController', :path => '../node_modules/react-native-customized-image-picker/ios/QBImagePicker/QBImagePickerController.podspec'
+  pod 'RSKImageCropper'
+  pod 'Permission-Camera', :path => "#{permissions_path}/Camera.podspec"
+  pod 'Permission-Microphone', :path => "#{permissions_path}/Microphone.podspec"
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
   pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
@@ -77,11 +82,7 @@ target 'Project' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
-
-  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
-
-  target 'ProjectTests' do
+  target 'NewsHuntTests' do
     inherit! :complete
     # Pods for testing
   end
@@ -98,10 +99,10 @@ target 'Project' do
   end
 end
 
-target 'Project-tvOS' do
-  # Pods for Project-tvOS
+target 'NewsHunt-tvOS' do
+  # Pods for NewsHunt-tvOS
 
-  target 'Project-tvOSTests' do
+  target 'NewsHunt-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end

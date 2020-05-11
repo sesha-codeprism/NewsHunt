@@ -1,9 +1,17 @@
-rootProject.name = 'Project'
+rootProject.name = 'NewsHunt'
+include ':react-native-audio-player-recorder'
+project(':react-native-audio-player-recorder').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-audio-player-recorder/android')
+include ':react-native-audio-record'
+project(':react-native-audio-record').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-audio-record/android')
+include ':react-native-audio-record'
+project(':react-native-audio-record').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-audio-record/android')
 include ':@react-native-community_async-storage'
 project(':@react-native-community_async-storage').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-community/async-storage/android')
 include ':react-native-device-info'
 include ':lottie-react-native'
 project(':lottie-react-native').projectDir = new File(rootProject.projectDir, '../node_modules/lottie-react-native/src/android')
+include ':react-native-audio'
+project(':react-native-audio').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-audio/android')
 
 project(':react-native-device-info').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-device-info/android')
 apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)

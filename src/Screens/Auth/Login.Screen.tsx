@@ -68,18 +68,15 @@ export default class LoginScreen extends React.Component<
       uname: username,
       upass: password,
     };
+    SimpleToast.show('Login being called',SimpleToast.LONG);
     API.userLogin(loginPayload)
       .then((data) => {
-        if (data.status === 200) {
-          GLOBALS.store.userLoggedIn = true;
-          updateStore(JSON.stringify(GLOBALS.store));
-
-          this.props.navigation.navigate('App');
-        } else {
-          SimpleToast.show(`${data.status}`, SimpleToast.LONG);
-        }
+        SimpleToast.show("Login Success, Navigating to App",SimpleToast.LONG);
+        GLOBALS.store.userLoggedIn = true;
+        updateStore(JSON.stringify(GLOBALS.store));
+        this.props.navigation.navigate('App');
       })
-      .catch((err) => onCatch(err, 'user login'));
+      .catch((err) => {SimpleToast.show(`Login failed due to ${err}`); onCatch(err, 'user login')});
   };
   public render() {
     return (
@@ -109,7 +106,6 @@ export default class LoginScreen extends React.Component<
                 onSubmitEditing={() => {
                   this.passwordTextInputRef.current?.focus();
                 }}
-                autoFocus
               />
               <TextInput
                 autoCapitalize="none"

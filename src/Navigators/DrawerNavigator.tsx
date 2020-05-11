@@ -2,12 +2,13 @@ import {Dimensions} from 'react-native';
 import {createDrawerNavigator} from 'react-navigation-drawer';
 import {CustomDrawerContentComponent} from '../Screens/App/Menu';
 import HomeScreen from '../Screens/App/HomeScreen';
+import MainNavigator from './Main.navigator';
 const width = Dimensions.get('screen').width;
 
 const DrawerNavigator = createDrawerNavigator(
   {
     Home: {
-      screen: HomeScreen,
+      screen: MainNavigator,
       path: 'app',
       navigationOptions: {
         drawerLabel: () => null,

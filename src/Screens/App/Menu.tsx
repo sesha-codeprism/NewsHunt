@@ -20,7 +20,8 @@ const drawerItems = () => [
   {title: 'National', screen: 'HealthLog'},
   {title: 'International', screen: 'AllPlans'},
   {title: 'Settings', screen: 'Subscription'},
-  // {title: 'Preferences', screen: 'Preferences'},
+  {title: 'Audio Record', screen: 'AudioRecord'},
+  {title: 'Report Story', screen: 'ReportStory'},
   // {title: 'About Us', screen: 'AboutUs'},
   // {title: 'Privacy y', screen: 'PrivacyPolicy'},
   // {title: 'Terms of', screen: 'TermsOfUse'},
@@ -33,6 +34,7 @@ const renderListItem = (data: any, props: any) => {
       <TouchableOpacity
         onPress={() => {
           props.navigation.closeDrawer();
+          props.navigation.navigate(data.item.screen);
         }}
         style={styles.rowStyle}>
         <Image
