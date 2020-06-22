@@ -16,9 +16,10 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {resetGlobalStore} from '../../utils/globals';
 
 const drawerItems = () => [
-  {title: 'Regional', screen: 'NewRemindersScreen'},
-  {title: 'National', screen: 'HealthLog'},
-  {title: 'International', screen: 'AllPlans'},
+  // {title: 'Regional', screen: 'NewRemindersScreen'},
+  // {title: 'National', screen: 'HealthLog'},
+  // {title: 'International', screen: 'AllPlans'},
+  {title: 'News Categories', screen: 'NewsCategories'},
   {title: 'Settings', screen: 'Subscription'},
   {title: 'Audio Record', screen: 'AudioRecord'},
   {title: 'Report Story', screen: 'ReportStory'},

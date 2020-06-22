@@ -23,6 +23,7 @@ import {onCatch} from '../../utils/helper';
 import {newsObject} from '../../@types/newsObject';
 import {GStyle} from '../../utils/styles';
 import {GLOBALS} from '../../utils/globals';
+import SimpleToast from 'react-native-simple-toast';
 
 export interface HomeScreenProps {
   navigation: NavigationStackProp<
@@ -33,6 +34,7 @@ export interface HomeScreenProps {
 
 export interface HomeScreenState {
   newsData: newsObject[];
+  category: string;
 }
 const {width, height} = Dimensions.get('window');
 export default class HomeScreen extends React.Component<
@@ -44,11 +46,30 @@ export default class HomeScreen extends React.Component<
 
     this.state = {
       newsData: [],
+      category: GLOBALS.store.newsCategory || '',
     };
   }
   componentDidMount() {
     this.getAllNews();
   }
+
+  componentDidFocus = () => {
+    console.log(this.state.category, GLOBALS.store.newsCategory);
+    if (this.state.category) {
+      if (this.state.category !== GLOBALS.store.newsCategory) {
+        SimpleToast.show('Getting news by selected category', SimpleToast.LONG);
+        this.setState({category: this.state.category}, () => {
+          this.getNewsByCategory(this.state.category);
+        });
+      }
+    } else {
+      this.setState({category: GLOBALS.store.newsCategory});
+    }
+  };
+
+  subs = [
+    this.props.navigation.addListener('didFocus', this.componentDidFocus),
+  ];
   getAllNews = () => {
     GLOBALS.activityIndicator.show();
     API.getNews()
@@ -59,6 +80,15 @@ export default class HomeScreen extends React.Component<
       .catch((err) => onCatch(err, 'Getting News'));
   };
 
+  getNewsByCategory = (category: string) => {
+    GLOBALS.activityIndicator.show();
+    API.getNewsByCategory(category)
+      .then(({data}) => {
+        this.setState({newsData: data});
+        GLOBALS.activityIndicator.hide();
+      })
+      .catch((err) => onCatch(err, 'getting news by category'));
+  };
   public render() {
     return (
       <GoSafe hideStatusBar>
@@ -74,11 +104,13 @@ export default class HomeScreen extends React.Component<
             <Text style={styles.headerText}>News Hunt</Text>
           </View>
           <ScrollView
-           snapToOffsets={[height]}
-            scrollEnabled={true}
-            scrollEventThrottle={21}
-            showsVerticalScrollIndicator={false}
-            overScrollMode="never">
+            pagingEnabled
+            horizontal={true}
+            snapToInterval={width}
+            showsHorizontalScrollIndicator={false}
+            scrollEventThrottle={500}
+            decelerationRate="fast"
+            snapToAlignment={'center'}>
             {this.state.newsData.map((item, index) => {
               return (
                 <View key={`Index${index}`} style={styles.pagingCard}>

@@ -5,6 +5,7 @@ interface GLOBALSType {
   };
   store: {
     userLoggedIn: boolean;
+    newsCategory: string;
   };
 }
 
@@ -15,11 +16,13 @@ export const GLOBALS: GLOBALSType = {
   },
   store: {
     userLoggedIn: false,
+    newsCategory: '',
   },
 };
 
 export const resetGlobalStore = () => {
   GLOBALS.store = {
     userLoggedIn: false,
+    newsCategory: '',
   };
 };

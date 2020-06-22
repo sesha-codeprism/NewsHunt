@@ -7,9 +7,14 @@ import ActivityOverlay from './src/Components/ActivityOverlay';
 import {GLOBALS} from './src/utils/globals';
 
 export default class App extends React.Component {
-  // componentDidMount() {
-  //   Platform.OS === 'android' && NativeModules.SplashScreen.disable();
-  // }
+  componentDidMount() {
+    // Platform.OS === 'android' && NativeModules.SplashScreen.disable();
+    if (__DEV__) {
+      import('./src/utils/ReactotronConfig').then(() =>
+        console.log('Reactotron Configured'),
+      );
+    }
+  }
   render() {
     return (
       <>

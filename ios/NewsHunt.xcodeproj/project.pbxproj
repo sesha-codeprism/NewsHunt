@@ -194,7 +194,6 @@
 				F110ECBD48CD2FE0CA23225E /* Pods-NewsHunt-tvOSTests.debug.xcconfig */,
 				0030CC3C7E9CE0B274930B98 /* Pods-NewsHunt-tvOSTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};

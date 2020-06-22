@@ -12,7 +12,7 @@ import {
 import {NavigationStackScreenProps} from 'react-navigation-stack';
 import GoSafe from '../../Components/RNSafe';
 import {globalColors} from '../../utils/Colors';
-import {SharedStyles} from '../../utils/styles';
+import {SharedStyles, GStyle} from '../../utils/styles';
 import {ImageAssets} from '../../assets/images/index';
 import SimpleToast from 'react-native-simple-toast';
 import {isValidEmail, onCatch, updateStore} from '../../utils/helper';
@@ -68,15 +68,18 @@ export default class LoginScreen extends React.Component<
       uname: username,
       upass: password,
     };
-    SimpleToast.show('Login being called',SimpleToast.LONG);
+    SimpleToast.show('Login being called', SimpleToast.LONG);
     API.userLogin(loginPayload)
       .then((data) => {
-        SimpleToast.show("Login Success, Navigating to App",SimpleToast.LONG);
+        SimpleToast.show('Login Success, Navigating to App', SimpleToast.LONG);
         GLOBALS.store.userLoggedIn = true;
         updateStore(JSON.stringify(GLOBALS.store));
         this.props.navigation.navigate('App');
       })
-      .catch((err) => {SimpleToast.show(`Login failed due to ${err}`); onCatch(err, 'user login')});
+      .catch((err) => {
+        SimpleToast.show(`Login failed due to ${err}`);
+        onCatch(err, 'user login');
+      });
   };
   public render() {
     return (
@@ -148,11 +151,6 @@ export default class LoginScreen extends React.Component<
                   onPress={() => {
                     this.onLogin();
                   }}>
-                  <Image
-                    source={ImageAssets.userLogo}
-                    style={styles.icon}
-                    resizeMode="contain"
-                  />
                   <Text style={styles.signInText}>User Login</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -161,16 +159,25 @@ export default class LoginScreen extends React.Component<
                     justifyContent: 'center',
                     alignItems: 'center',
                     marginTop: 20,
+                    alignSelf: 'center',
                   }}
                   onPress={() => {
                     this.onLogin();
                   }}>
-                  <Image
-                    source={ImageAssets.reporterLogo}
-                    style={styles.icon}
-                    resizeMode="contain"
-                  />
                   <Text style={styles.signInText}>Reporter Login</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginTop: 20,
+                    alignSelf: 'center',
+                  }}
+                  onPress={() => {
+                    this.props.navigation.navigate('App');
+                  }}>
+                  <Text style={styles.signInText}>Skip Login as User</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -186,11 +193,11 @@ const styles = StyleSheet.create({
     width: width,
     height: height - 200,
     position: 'absolute',
-    top: '24%',
+    top: '22%',
   },
   text1: {
     color: 'black',
-    fontSize: 22,
+    fontSize: GStyle.fontSize.medium,
     textAlign: 'center',
     marginTop: 30,
   },
@@ -206,9 +213,10 @@ const styles = StyleSheet.create({
     ...SharedStyles.centerAll,
   },
   rightContainer: {
-    alignSelf: 'flex-end',
+    alignSelf: 'center',
     width: '50%',
     marginTop: 20,
+    ...SharedStyles.centerAll,
   },
   icon: {
     height: 50,
@@ -216,7 +224,7 @@ const styles = StyleSheet.create({
   },
   signInText: {
     color: 'black',
-    fontSize: 18,
+    fontSize: GStyle.fontSize.medium,
     textAlign: 'center',
   },
   imageBG: {

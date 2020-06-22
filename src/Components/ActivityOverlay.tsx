@@ -40,13 +40,12 @@ class ActivityOverlay extends Component<Props, State> {
 const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.6)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   indicatorStyles: {
-    width: 150,
-    height: 150,
+    width: 70,
+    height: 70,
   },
 });
 

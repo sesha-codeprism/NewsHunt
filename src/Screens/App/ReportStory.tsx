@@ -8,6 +8,8 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
+  Platform,
+  ActionSheetIOS,
   KeyboardAvoidingView,
 } from 'react-native';
 import {NavigationStackProp} from 'react-navigation-stack';
@@ -16,7 +18,13 @@ import {globalColors} from '../../utils/Colors';
 import {ImageAssets} from '../../assets/images';
 import {GStyle, SharedStyles} from '../../utils/styles';
 import GoSafe from '../../Components/RNSafe';
+//@ts-ignore
 import ImagePicker from 'react-native-customized-image-picker';
+import {Picker} from '@react-native-community/picker';
+import API from '../../API/api';
+import {onCatch} from '../../utils/helper';
+
+var FormData = require('form-data');
 
 export interface ReportStoryProps {
   navigation: NavigationStackProp<
@@ -32,6 +40,8 @@ export interface ReportStoryState {
   content: string;
   contentLen: number;
   imageList: Array<any>;
+  videoURL: string;
+  image: any;
 }
 
 const {width, height} = Dimensions.get('window');
@@ -47,6 +57,7 @@ export default class ReportStory extends React.Component<
   userImage?: string;
   userTitle?: string;
   userMessage?: string;
+  cameraOptions = ['Camera', 'Gallery'];
 
   constructor(props: ReportStoryProps) {
     super(props);
@@ -58,21 +69,155 @@ export default class ReportStory extends React.Component<
       content: '',
       contentLen: 400,
       imageList: [],
+      videoURL: '',
+      image: '',
     };
   }
 
+  showPicker = () => {
+    return Platform.OS !== 'ios' ? (
+      <Picker
+        onValueChange={(value) => {
+          this.onValueChange;
+        }}>
+        {this.cameraOptions.map((code) => (
+          <Picker.Item label={code} value={code} key={code} />
+        ))}
+      </Picker>
+    ) : (
+      <TouchableOpacity
+        onPress={() => {
+          ActionSheetIOS.showActionSheetWithOptions(
+            {
+              options: [...this.cameraOptions, 'Cancel'],
+              cancelButtonIndex: this.cameraOptions.length,
+            },
+            (buttonIndex) => {
+              this.imagePick(this.cameraOptions[buttonIndex]);
+            },
+          );
+        }}></TouchableOpacity>
+    );
+  };
+
+  onValueChange = (value: string, index: number) => {
+    this.imagePick(value);
+  };
+
+  imagePick = (option: string) => {
+    if (option === 'Camera') {
+      ImagePicker.openCamera({
+        cropping: true,
+      }).then((image: any) => {
+        this.setState({image: image.path});
+      });
+    } else {
+      ImagePicker.openPicker({
+        multiple: true,
+      }).then((images: any) => {
+        console.log(images[0].path);
+        // this.setState({imageList: images});
+      });
+    }
+  };
   selectImage = (index: number) => {
     ImagePicker.openPicker({
+      maxSize: 5,
       multiple: true,
     }).then((images: any) => {
-      console.log(images);
+      // console.log(images[0].path);
       this.setState({imageList: images});
     });
   };
 
+  selectVideo = () => {
+    ImagePicker.openPicker({
+      isVideo: true,
+    })
+      .then((image: any) => {
+        this.setState({videoURL: image[0].path});
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
+  };
+
+  uploadStory = () => {
+    var formData = new FormData();
+    var imagelist = this.state.imageList;
+    var a: any[] = [];
+    imagelist.forEach((item, index) => {
+      const cleanPath = item.path.replace('file://', '');
+      const newFile = {
+        uri: cleanPath,
+        type: 'image/jpeg',
+      };
+      a.push(newFile);
+    });
+
+    // a.forEach((element, i) => {
+    //   const newFile = {
+    //     uri: element,
+    //     type: 'image/jpg',
+    //   };
+    //   formData.append('posting_images[]', newFile);
+    // });
+    this.state.imageList.forEach((item, i) => {
+      var filename = item.path.split('/');
+      const name = filename[filename.length - 1];
+      formData.append('postingImages[]', {
+        uri: item.path,
+        type: item.mime,
+        name: item.filename || name,
+      });
+    });
+
+    formData.append('ntitle', this.state.titleText);
+    formData.append('ntext', this.state.content);
+    formData.append('nmtype', 'image');
+    formData.append('nuid', '1');
+    if (
+      this.state.videoURL !== null &&
+      this.state.videoURL !== undefined &&
+      this.state.videoURL !== ''
+    ) {
+      formData.append('video_files', this.state.videoURL);
+    }
+    console.log('FormData set...Calling API');
+
+    API.userStoryUpload(formData)
+      .then(({data}) => {
+        console.log(data);
+        this.props.navigation.goBack();
+      })
+      .catch((err) => onCatch(err, 'Uploading user story'));
+  };
+
+  reportStory = () => {
+    var imagelist = this.state.imageList;
+    var a: any[] = [];
+    imagelist.forEach((item, index) => {
+      a.push(item.path);
+    });
+
+    API.userReportStory({
+      posting_images: a,
+      ntitle: this.state.titleText,
+      ntext: this.state.content,
+      nmtype: 'image',
+      nuid: 1,
+      videoFiles: this.state.videoURL,
+    })
+      .then(({data}) => {
+        console.log(data);
+        this.props.navigation.goBack();
+      })
+      .catch((err) => onCatch(err, 'reporting story'));
+  };
+
   public render() {
     const {
-      state: {titleBoxHeight},
+      state: {titleBoxHeight, imageList},
     } = this;
     return (
       <GoSafe hideStatusBar>
@@ -112,25 +257,57 @@ export default class ReportStory extends React.Component<
                   {this.state.currentLen}/{titleTextLen}
                 </Text>
               </View>
-              <Text style={[styles.labelText,{marginTop:15}]}>Tap on Images to upload</Text>
+              <Text style={[styles.labelText, {marginTop: 15}]}>
+                Tap on Images to upload
+              </Text>
               <View style={styles.rowStyles}>
-                {listArray.map((item, index) => {
-                  return (
-                    <TouchableOpacity
-                      onPress={() => {
-                        this.selectImage(index);
-                      }}>
-                      <Image
-                        source={
-                          this.state.imageList.length <= 0
-                            ? ImageAssets.androidLogo
-                            : {uri: this.state.imageList[index].path}
-                        }
-                        style={styles.imageStyles}
-                      />
-                    </TouchableOpacity>
-                  );
-                })}
+                {imageList.length <= 0
+                  ? listArray.map((item, index) => {
+                      return (
+                        <TouchableOpacity
+                          onPress={() => {
+                            this.selectImage(index);
+                          }}
+                          key={`Index${index}`}>
+                          <Image
+                            source={ImageAssets.placeholder}
+                            style={styles.imageStyles}
+                          />
+                        </TouchableOpacity>
+                      );
+                    })
+                  : imageList.map((item, index) => {
+                      return (
+                        <TouchableOpacity
+                          onPress={() => {
+                            this.selectImage(index);
+                          }}
+                          key={`Index${index}`}>
+                          <Image
+                            source={{uri: imageList[index].path}}
+                            style={styles.imageStyles}
+                          />
+                        </TouchableOpacity>
+                      );
+                    })}
+              </View>
+              <Text style={[styles.labelText, {marginTop: height * 0.1}]}>
+                Tap on Image to upload a video
+              </Text>
+              <View style={styles.rowStyles}>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.selectVideo();
+                  }}>
+                  <Image
+                    source={
+                      this.state.videoURL !== ''
+                        ? {uri: this.state.videoURL}
+                        : ImageAssets.placeholder
+                    }
+                    style={styles.imageStyles}
+                  />
+                </TouchableOpacity>
               </View>
               <View style={styles.contentContainer}>
                 <Text style={styles.labelText}>News Article</Text>
@@ -168,7 +345,11 @@ export default class ReportStory extends React.Component<
 									<FastImage  source={GoImages.video} style={styles.image} resizeMode={FastImage.resizeMode.contain} />
 								</TouchableOpacity> */}
                   </View>
-                  <TouchableOpacity style={styles.postButton}>
+                  <TouchableOpacity
+                    style={styles.postButton}
+                    onPress={() => {
+                      this.uploadStory();
+                    }}>
                     <Text style={styles.buttonText}>Post Story</Text>
                   </TouchableOpacity>
                 </View>
@@ -304,7 +485,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     marginTop: -8,
-    
   },
   image: {
     height: 20,
@@ -313,8 +493,8 @@ const styles = StyleSheet.create({
   rowStyles: {
     flexDirection: 'row',
     height: 100,
-    margin:5,
-    flexWrap:"wrap"
+    margin: 5,
+    flexWrap: 'wrap',
   },
   imageStyles: {
     height: 50,

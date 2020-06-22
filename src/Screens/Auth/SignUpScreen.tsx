@@ -103,18 +103,21 @@ export default class SignUpScreen extends React.Component<
       upass: password,
       uphone: phone,
     };
-    SimpleToast.show("Signup called....Signing you up", SimpleToast.LONG);
+    SimpleToast.show('Signup called....Signing you up', SimpleToast.LONG);
     GLOBALS.activityIndicator.show();
     API.userSignUp(payload)
       .then((data) => {
         GLOBALS.activityIndicator.hide();
-        SimpleToast.show("Sign up Success..Taking you to the app", SimpleToast.LONG);
+        SimpleToast.show(
+          'Sign up Success..Taking you to the app',
+          SimpleToast.LONG,
+        );
         GLOBALS.store.userLoggedIn = true;
         updateStore(JSON.stringify(GLOBALS.store));
-        this.props.navigation.navigate('App')
+        this.props.navigation.navigate('App');
       })
       .catch((err) => {
-        SimpleToast.show(`Signup failed due to ${err}.`, SimpleToast.LONG)
+        SimpleToast.show(`Signup failed due to ${err}.`, SimpleToast.LONG);
         onCatch(err, 'signUp');
       });
   };
@@ -125,9 +128,9 @@ export default class SignUpScreen extends React.Component<
         source={ImageAssets.smallLoginBG}
         resizeMode="cover"
         style={styles.imageBG}>
-        <View style={styles.mainContainer}>
-          <View style={styles.innerContainer}>
-            <KeyboardAvoidingView behavior="padding" enabled>
+        <KeyboardAvoidingView style={{flex: 1}} behavior="padding" enabled>
+          <View style={styles.mainContainer}>
+            <View style={styles.innerContainer}>
               <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.container}>
                   <View style={styles.textContainer}>
@@ -193,6 +196,7 @@ export default class SignUpScreen extends React.Component<
                       secureTextEntry
                     />
                     <TextInput
+                      ref={this.verifyPasswordTextInput}
                       style={styles.LanguageContainer}
                       placeholder="Enter mobile Number"
                       placeholderTextColor="white"
@@ -267,24 +271,33 @@ export default class SignUpScreen extends React.Component<
                       }}>
                       <Text style={styles.loginText}>Back</Text>
                     </TouchableOpacity>
-                    <View style={styles.rightContainer}></View>
                     <TouchableOpacity
                       style={styles.buttonContainer}
-                      onPress={() => {
-                        this.onSignUP();
-                      }}>
+                      onPress={this.onSignUP}>
                       <Image
                         source={ImageAssets.rightArrow}
-                        style={{height: 30, width: 30}}
+                        style={{height: 15, width: 15}}
                         resizeMode="contain"
                       />
                     </TouchableOpacity>
                   </View>
+                  <TouchableOpacity
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginTop: 20,
+                    }}
+                    onPress={() => {
+                      this.props.navigation.navigate('App');
+                    }}>
+                    <Text style={styles.signInText}>Skip Login as User</Text>
+                  </TouchableOpacity>
                 </View>
               </ScrollView>
-            </KeyboardAvoidingView>
+            </View>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </ImageBackground>
     );
   }
@@ -300,7 +313,7 @@ const styles = StyleSheet.create({
     height: height - 130,
   },
   textStyle: {
-    fontSize: GStyle.fontSize.medium * 1.25,
+    fontSize: GStyle.fontSize.medium,
     color: globalColors.white,
   },
   textContainer: {
@@ -325,13 +338,15 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     backgroundColor: globalColors.primary,
-    width: 70,
-    height: 70,
-    borderRadius: 70 / 2,
+    width: 50,
+    height: 50,
+    borderRadius: 50 / 2,
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 10,
+    marginLeft: 50,
+    zIndex: 100,
   },
   innerContainer: {
     ...SharedStyles.centerAll,
@@ -374,8 +389,8 @@ const styles = StyleSheet.create({
     width: 50,
   },
   signInText: {
-    color: 'white',
-    fontSize: 18,
+    color: 'black',
+    fontSize: GStyle.fontSize.small,
     textAlign: 'center',
   },
   imageBG: {

@@ -13,6 +13,7 @@ const ImageAssets = {
   androidLogo: require(`${localURI}/androidlogo.png`),
   androidW: require(`${localURI}/androidW.png`),
   menu: require(`${localURI}/menu.png`),
+  placeholder: require(`${localURI}/placeholder.png`),
 };
 
 export {ImageAssets};
