@@ -14,6 +14,9 @@ const ImageAssets = {
   androidW: require(`${localURI}/androidW.png`),
   menu: require(`${localURI}/menu.png`),
   placeholder: require(`${localURI}/placeholder.png`),
+  local: require(`${localURI}/local.png`),
+  national: require(`${localURI}/national.png`),
+  international: require(`${localURI}/international.png`),
 };
 
 export {ImageAssets};

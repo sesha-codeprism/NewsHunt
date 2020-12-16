@@ -1,8 +1,10 @@
-import {Dimensions, Platform, PixelRatio} from 'react-native';
+import {Dimensions, Platform, PixelRatio, Image} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import SimpleToast from 'react-native-simple-toast';
 import moment from 'moment';
 import {GLOBALS} from './globals';
+import {MainNewsCategories} from 'src/@types/MainNewsCategories';
+import {ImageAssets} from '../assets/images/index';
 
 declare var global: any;
 export const Log =
@@ -363,6 +365,27 @@ export const getAllDatesForTheWeek = (date: Date) => {
   return datesArray;
 };
 
+export const mainNewsCategories = () => {
+  let mainNewsCategories: MainNewsCategories[] = [
+    {
+      category_id: 1,
+      category_name: 'ప్రాంతీయం',
+      imageURI: ImageAssets.local,
+    },
+    {
+      category_id: 2,
+      category_name: 'జాతీయం',
+      imageURI: ImageAssets.national,
+    },
+    {
+      category_id: 3,
+      category_name: 'అంతర్జాతీయం',
+      imageURI: ImageAssets.international,
+    },
+  ];
+  return mainNewsCategories;
+};
+
 export const weeksInMonth = (month?: number, year?: number) =>
   Math.round(daysInMonth(month, year) / 7);
 
@@ -556,4 +579,25 @@ export const timeDiff = (endTime: number, startTime: number) =>
 //         });
 //       });
 //   });
+// };
+
+// export const mainNewsCategories = () => {
+//   let mainNewsCategories: MainNewsCategories[] = [
+//     {
+//       category_id: 1,
+//       category_name: 'ప్రాంతీయం',
+//       imageURI: '../../assets/images/local.png',
+//     },
+//     {
+//       category_id: 2,
+//       category_name: 'జాతీయం',
+//       imageURI: '../../assets/images/national.png',
+//     },
+//     {
+//       category_id: 3,
+//       category_name: 'అంతర్జాతీయం',
+//       imageURI: '../../assets/images/international.png',
+//     },
+//   ];
+//   return mainNewsCategories;
 // };

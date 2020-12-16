@@ -7,7 +7,9 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint .",
+    "androidBundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
+    "iosBundle": "react-native bundle --entry-file index.js --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.10.0",
@@ -16,8 +18,10 @@
     "axios": "^0.19.2",
     "buffer": "^5.6.0",
     "form-data": "^3.0.0",
+    "jsc-android": "^241213.1.0",
     "lottie-react-native": "^3.3.2",
     "moment": "^2.25.3",
+    "qs": "^6.9.4",
     "react": "16.11.0",
     "react-native": "0.62.2",
     "react-native-audio": "^4.3.0",
@@ -25,6 +29,7 @@
     "react-native-camera": "^3.24.2",
     "react-native-customized-image-picker": "^0.1.11",
     "react-native-device-info": "^5.5.6",
+    "react-native-fast-image": "^8.3.2",
     "react-native-fit-image": "^1.5.5",
     "react-native-gesture-handler": "^1.6.1",
     "react-native-localization": "^2.1.6",

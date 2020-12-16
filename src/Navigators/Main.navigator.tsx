@@ -4,6 +4,7 @@ import HomeScreen from '../Screens/App/HomeScreen';
 import AudioRecord from '../Screens/App/AudioRecord';
 import ReportStory from '../Screens/App/ReportStory';
 import NewsCategories from '../Screens/App/NewsCategories';
+import ReportComplaints from '../Screens/App/ReportComplaint';
 const MainNavigator = createStackNavigator({
   HomeScreen: {
     screen: HomeScreen,
@@ -19,6 +20,12 @@ const MainNavigator = createStackNavigator({
   },
   ReportStory: {
     screen: ReportStory,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+  ReportConplaint: {
+    screen: ReportComplaints,
     navigationOptions: {
       headerShown: false,
     },

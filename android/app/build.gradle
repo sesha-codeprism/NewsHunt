@@ -78,7 +78,7 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-    enableHermes: false,  // clean and rebuild if changing
+    enableHermes: true,  // clean and rebuild if changing
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -197,6 +197,8 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     implementation project(':react-native-audio')
     implementation project(':lottie-react-native')
+    implementation'com.github.bumptech.glide:glide:4.3.1'
+    implementation 'com.facebook.soloader:soloader:0.9.0+'
     implementation 'com.android.support:multidex:1.0.3'
 
 

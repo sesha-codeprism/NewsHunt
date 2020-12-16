@@ -9,7 +9,6 @@ import {
   ScrollView,
   Text,
   Image,
-  Picker,
   ActionSheetIOS,
   ImageBackground,
 } from 'react-native';
@@ -27,6 +26,8 @@ import {
 } from '../../utils/helper';
 import API from '../../API/api';
 import {GLOBALS} from '../../utils/globals';
+import {Picker} from '@react-native-community/picker';
+import FastImage from 'react-native-fast-image';
 
 export interface SignUpScreenProps extends NavigationStackScreenProps {}
 
@@ -35,7 +36,8 @@ export interface SignUpScreenState {
   password: string;
   phone: string;
   username: string;
-  profile: string;
+  fname: string;
+  profile: any;
 }
 
 const {width, height} = Dimensions.get('window');
@@ -45,9 +47,10 @@ export default class SignUpScreen extends React.Component<
 > {
   private nameTextInput = React.createRef<TextInput>();
   private emailTextInput = React.createRef<TextInput>();
+  private fnameRef = React.createRef<TextInput>();
   private passwordTextInput = React.createRef<TextInput>();
   private verifyPasswordTextInput = React.createRef<TextInput>();
-  profiles = ['User', 'Reporter', 'Editor'];
+  profiles = ['Please Pick a profile', 'User', 'Reporter', 'Editor'];
 
   constructor(props: SignUpScreenProps) {
     super(props);
@@ -56,8 +59,9 @@ export default class SignUpScreen extends React.Component<
       email: '',
       password: '',
       phone: '',
+      fname: '',
       username: '',
-      profile: 'Select an option',
+      profile: 1,
     };
   }
   componentDidMount() {}
@@ -75,7 +79,8 @@ export default class SignUpScreen extends React.Component<
   ];
 
   onSignUP = () => {
-    const {email, password, phone, username} = this.state;
+    console.log(this.state);
+    const {email, password, phone, username, fname, profile} = this.state;
     if (!email && !phone) {
       SimpleToast.show('Enter Valid Email or Mobile Number', SimpleToast.LONG);
     } else if (email && !isValidEmail(email)) {
@@ -84,10 +89,15 @@ export default class SignUpScreen extends React.Component<
       SimpleToast.show('Enter a valid Mobile number', SimpleToast.LONG);
     } else if (!username) {
       SimpleToast.show('Enter a valid Name', SimpleToast.LONG);
+    } else if (!fname) {
+      SimpleToast.show('Enter your first name.', SimpleToast.LONG);
     } else if (!password) {
       SimpleToast.show('Enter a valid password', SimpleToast.LONG);
+    } else if (profile === 0) {
+      SimpleToast.show('Select a profile type.', SimpleToast.LONG);
     } else {
       this.SignUp(username, password, email, phone);
+      // console.log('This is response.', this.state);
     }
   };
 
@@ -98,23 +108,26 @@ export default class SignUpScreen extends React.Component<
     phone: string,
   ) => {
     const payload = {
-      ufname: username,
-      uname: email,
+      uname: username,
       upass: password,
+      user_type: this.state.profile,
+      ufname: this.state.fname,
       uphone: phone,
+      uemail: email,
     };
     SimpleToast.show('Signup called....Signing you up', SimpleToast.LONG);
     GLOBALS.activityIndicator.show();
     API.userSignUp(payload)
-      .then((data) => {
+      .then(({data}) => {
+        console.log(data);
         GLOBALS.activityIndicator.hide();
         SimpleToast.show(
           'Sign up Success..Taking you to the app',
           SimpleToast.LONG,
         );
-        GLOBALS.store.userLoggedIn = true;
-        updateStore(JSON.stringify(GLOBALS.store));
-        this.props.navigation.navigate('App');
+        // GLOBALS.store.userLoggedIn = true;
+        // updateStore(JSON.stringify(GLOBALS.store));
+        this.props.navigation.navigate('LoginScreen');
       })
       .catch((err) => {
         SimpleToast.show(`Signup failed due to ${err}.`, SimpleToast.LONG);
@@ -148,6 +161,37 @@ export default class SignUpScreen extends React.Component<
                       placeholderTextColor="white"
                       onChangeText={(text) => {
                         this.setState({username: text});
+                      }}
+                      onSubmitEditing={() => {
+                        this.fnameRef.current?.focus();
+                      }}
+                      blurOnSubmit
+                      selectionColor={globalColors.primary}
+                      returnKeyType="next"
+                      returnKeyLabel="next"
+                    />
+                    <View style={styles.tinyContainer}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          this.props.navigation.navigate('ForgotPassword');
+                        }}>
+                        <View style={styles.rowStyles}>
+                          <Text style={styles.errorText}>
+                            * This username is used whenever you login in place
+                            of email.
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+
+                    <TextInput
+                      ref={this.fnameRef}
+                      style={styles.LanguageContainer}
+                      autoCapitalize="words"
+                      placeholder="Enter your first name"
+                      placeholderTextColor="white"
+                      onChangeText={(text) => {
+                        this.setState({fname: text});
                       }}
                       onSubmitEditing={() => {
                         this.emailTextInput.current?.focus();
@@ -207,7 +251,7 @@ export default class SignUpScreen extends React.Component<
                       keyboardType="number-pad"
                       returnKeyType="done"
                       onSubmitEditing={() => {
-                        this.onSignUP();
+                        console.log('Response', this.state);
                       }}
                       selectionColor={globalColors.primary}
                     />
@@ -215,14 +259,26 @@ export default class SignUpScreen extends React.Component<
                     {/* <View style={styles.boxControl}>
                       {Platform.OS !== 'ios' ? (
                         <Picker
-                          selectedValue={this.state.profile}
+                          enabled={false}
+                          selectedValue={this.profiles[this.state.profile]}
                           style={{
                             height: '100%',
                             width: '100%',
                             color: 'white',
                           }}
                           onValueChange={(itemValue) =>
-                            this.setState({profile: itemValue})
+                            this.setState(
+                              {
+                                profile: this.profiles.indexOf(
+                                  itemValue.toString(),
+                                ),
+                              },
+                              () => {
+                                console.log(
+                                  this.profiles.indexOf(itemValue.toString()),
+                                );
+                              },
+                            )
                           }>
                           {this.profiles.map((item, index) => {
                             return (
@@ -243,15 +299,13 @@ export default class SignUpScreen extends React.Component<
                               },
                               (buttonIndex) => {
                                 this.setState({
-                                  profile:
-                                    this.profiles[buttonIndex] ||
-                                    this.state.profile,
+                                  profile: buttonIndex,
                                 });
                               },
                             );
                           }}>
                           <Text style={styles.textInputText}>
-                            {this.state.profile}
+                            {this.profiles[this.state.profile]}
                           </Text>
                         </TouchableOpacity>
                       )}
@@ -274,25 +328,13 @@ export default class SignUpScreen extends React.Component<
                     <TouchableOpacity
                       style={styles.buttonContainer}
                       onPress={this.onSignUP}>
-                      <Image
+                      <FastImage
                         source={ImageAssets.rightArrow}
                         style={{height: 15, width: 15}}
                         resizeMode="contain"
                       />
                     </TouchableOpacity>
                   </View>
-                  <TouchableOpacity
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginTop: 20,
-                    }}
-                    onPress={() => {
-                      this.props.navigation.navigate('App');
-                    }}>
-                    <Text style={styles.signInText}>Skip Login as User</Text>
-                  </TouchableOpacity>
                 </View>
               </ScrollView>
             </View>
@@ -350,7 +392,7 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     ...SharedStyles.centerAll,
-    marginTop: '45%',
+    marginTop: height * 0.25,
     alignSelf: 'center',
   },
   loginText: {
@@ -364,6 +406,8 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     color: 'white',
     textAlign: 'center',
+    alignSelf: 'center',
+    marginTop: 5,
   },
   boxControl: {
     margin: 10,
@@ -396,5 +440,22 @@ const styles = StyleSheet.create({
   imageBG: {
     width: width,
     height: height,
+  },
+  tinyContainer: {
+    justifyContent: 'center',
+    overflow: 'scroll',
+    alignContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
+    marginLeft: '5%',
+    width: '90%',
+  },
+  errorText: {
+    fontSize: GStyle.fontSize.xmini,
+    color: globalColors.darkest,
+    textAlign: 'center',
+  },
+  rowStyles: {
+    flexDirection: 'row',
   },
 });

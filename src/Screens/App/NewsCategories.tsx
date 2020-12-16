@@ -14,17 +14,24 @@ import {ImageAssets} from '../../assets/images/index';
 import {globalColors} from '../../utils/Colors';
 import {categoriesObject} from '../../@types/categoriesObject';
 import API from '../../API/api';
-import {onCatch, updateStore} from '../../utils/helper';
+import {mainNewsCategories, onCatch, updateStore} from '../../utils/helper';
 import {GLOBALS} from '../../utils/globals';
 import {SharedStyles, GStyle} from '../../utils/styles';
 import SimpleToast from 'react-native-simple-toast';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
+import FastImage from 'react-native-fast-image';
+import {MainNewsCategories} from '../../@types/MainNewsCategories';
+import {ViewStyle} from 'react-native';
 
 export interface NewsCategoriesProps extends NavigationStackScreenProps {}
 
 const {width, height} = Dimensions.get('window');
 export interface NewsCategoriesState {
-  category: String;
+  category: string;
   categories: categoriesObject[];
+  listItems: Array<number>;
+  mainNewsCategories: MainNewsCategories[];
+  categoryId: number;
 }
 
 export default class NewsCategories extends React.Component<
@@ -37,6 +44,9 @@ export default class NewsCategories extends React.Component<
     this.state = {
       category: '',
       categories: [],
+      listItems: [],
+      mainNewsCategories: [],
+      categoryId: 0,
     };
   }
   componentDidMount() {
@@ -47,22 +57,37 @@ export default class NewsCategories extends React.Component<
     GLOBALS.activityIndicator.show();
     API.getCategories()
       .then(({data}) => {
-        // console.log(data);
-        this.setState({categories: data});
+        let x = mainNewsCategories();
+        this.setState({categories: data, mainNewsCategories: x});
         GLOBALS.activityIndicator.hide();
       })
       .catch((err) => onCatch(err, 'Getting categories'));
   };
 
-  selectedCategory = (category: string) => {
-    GLOBALS.store.newsCategory = category;
-    updateStore(JSON.stringify(GLOBALS.store));
+  selectedCategory = (category: number) => {
+    if (this.state.listItems.indexOf(category) === -1) {
+      let newList = this.state.listItems;
+      newList.push(category);
+      this.setState({listItems: newList});
+    } else {
+      let newList = this.state.listItems.filter(
+        (element) => element !== category,
+      );
+      this.setState({listItems: newList});
+    }
+  };
+
+  onDone = () => {
+    GLOBALS.store.newsCategory = this.state.listItems;
+    GLOBALS.mainNewsCategoryId = this.state.categoryId;
+    // updateStore(JSON.stringify(GLOBALS.store));
     SimpleToast.show('Category selected...Fetching news', SimpleToast.LONG);
     this.props.navigation.goBack();
   };
 
   public render() {
     const {categories} = this.state;
+    console.log(this.state.listItems);
     return (
       <GoSafe hideStatusBar>
         <View style={styles.main}>
@@ -72,24 +97,83 @@ export default class NewsCategories extends React.Component<
               onPress={() => {
                 this.props.navigation.openDrawer();
               }}>
-              <Image source={ImageAssets.menu} style={styles.img} />
+              <FastImage source={ImageAssets.menu} style={styles.img} />
             </TouchableOpacity>
             <Text style={styles.headerText}>News Hunt</Text>
           </View>
           <ScrollView showsVerticalScrollIndicator={false}>
+            <Text
+              style={[
+                styles.headerText,
+                {color: 'black', alignSelf: 'flex-start'},
+              ]}>
+              Main Categories
+            </Text>
+            <View style={styles.rowStyles}>
+              {this.state.mainNewsCategories.map((item, index) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.setState({categoryId: item.category_id});
+                    }}
+                    style={[
+                      styles.categoryCard,
+                      {
+                        backgroundColor:
+                          this.state.categoryId === item.category_id
+                            ? globalColors.themeBlue
+                            : globalColors.mediumGrey,
+                      },
+                    ]}
+                    key={`Index${index}`}>
+                    <Image
+                      source={
+                        item.imageURI !== null || item.imageURI !== ''
+                          ? item.imageURI
+                          : ImageAssets.placeholder
+                      }
+                      resizeMode="cover"
+                      resizeMethod="auto"
+                      style={styles.imageStyles}
+                    />
+                    <View style={styles.categoryHeader}>
+                      <Text style={[styles.titleText, {alignSelf: 'center'}]}>
+                        {item.category_name}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+            <View style={styles.underlineStyle} />
+            <Text
+              style={[
+                styles.headerText,
+                {color: 'black', alignSelf: 'flex-start'},
+              ]}>
+              Sub categories
+            </Text>
             <View style={styles.rowStyles}>
               {categories.map((item, index) => {
                 return (
                   <TouchableOpacity
                     onPress={() => {
-                      this.selectedCategory(item.cname);
+                      this.selectedCategory(parseInt(item.cid));
                     }}
-                    style={styles.categoryCard}
+                    style={[
+                      styles.categoryCard,
+                      {
+                        backgroundColor:
+                          this.state.listItems.indexOf(parseInt(item.cid)) !==
+                          -1
+                            ? globalColors.themeBlue
+                            : globalColors.white,
+                      },
+                    ]}
                     key={`Index${index}`}>
-                    <Image
+                    <FastImage
                       source={{uri: item.cimage}}
-                      resizeMethod="auto"
-                      resizeMode="cover"
+                      resizeMode={FastImage.resizeMode.cover}
                       style={styles.imageStyles}
                     />
                     <View style={styles.categoryHeader}>
@@ -102,6 +186,13 @@ export default class NewsCategories extends React.Component<
               })}
             </View>
           </ScrollView>
+          <TouchableOpacity
+            style={styles.continueButton}
+            onPress={() => {
+              this.onDone();
+            }}>
+            <Text style={styles.doneText}>Done</Text>
+          </TouchableOpacity>
         </View>
       </GoSafe>
     );
@@ -128,7 +219,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     alignContent: 'center',
-    marginTop: 20,
+    marginTop: 10,
     marginLeft: 5,
   },
   headerText: {
@@ -142,8 +233,9 @@ const styles = StyleSheet.create({
   },
   rowStyles: {
     flexDirection: 'row',
-    ...SharedStyles.centerAll,
     flexWrap: 'wrap',
+    alignItems: 'center',
+    padding: width * 0.05,
   },
   categoryCard: {
     height: 170,
@@ -171,5 +263,29 @@ const styles = StyleSheet.create({
     color: '#666666',
     textAlign: 'center',
     letterSpacing: 1.2,
+  },
+  continueButton: {
+    position: 'absolute',
+    bottom: 20,
+    backgroundColor: globalColors.themeBlue,
+    height: 50,
+    width: 170,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+  },
+  doneText: {
+    color: globalColors.white,
+    fontSize: GStyle.fontSize.medium,
+    alignSelf: 'center',
+    fontWeight: 'bold',
+  },
+  underlineStyle: {
+    margin: 10,
+    height: 2,
+    backgroundColor: 'grey',
+    width: width - 30,
+    alignSelf: 'center',
   },
 });

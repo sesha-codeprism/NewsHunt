@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import React, {Component} from 'react';
+import FastImage from 'react-native-fast-image';
 
 import {ratio} from '../utils/ConstStyles';
 
@@ -99,9 +100,10 @@ class Button extends Component<ItemProps, any> {
         onPress={this.props.onPress}>
         <View style={this.props.style}>
           {this.props.imgLeftSrc ? (
-            <Image
+            <FastImage
               style={this.props.imgLeftStyle}
               source={this.props.imgLeftSrc}
+              resizeMode={FastImage.resizeMode.contain}
             />
           ) : null}
           <Text style={this.props.textStyle}>{this.props.children}</Text>

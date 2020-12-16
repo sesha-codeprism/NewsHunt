@@ -5,6 +5,7 @@ import {ImageAssets} from '../../assets/images/index';
 import AsyncStorage from '@react-native-community/async-storage';
 import {GLOBALS} from '../../utils/globals';
 import {Log} from '../../utils/helper';
+import Permissions from 'react-native-permissions';
 
 export interface SplashScreenProps extends NavigationStackScreenProps {}
 
@@ -20,10 +21,26 @@ export default class SplashScreen extends React.Component<
     this.state = {};
   }
   componentDidMount() {
+    this.func();
+
     this.checkStore();
   }
   componentDidFocus = () => {
     console.log('Splash Screen');
+  };
+  func = () => {
+    this.checkPermission();
+  };
+  checkPermission = async () => {
+    const p = await Permissions.check('microphone');
+    console.log('permission check', p);
+    if (p === 'granted') return;
+    return this.requestPermission();
+  };
+
+  requestPermission = async () => {
+    const p = await Permissions.request('microphone');
+    console.log('permission request', p);
   };
 
   subs = [

@@ -14,6 +14,7 @@ import {DrawerNavigatorItemsProps} from '../..//@types/DrawerNavigationItemProps
 import {ImageAssets} from '../../assets/images';
 import AsyncStorage from '@react-native-community/async-storage';
 import {resetGlobalStore} from '../../utils/globals';
+import FastImage from 'react-native-fast-image';
 
 const drawerItems = () => [
   // {title: 'Regional', screen: 'NewRemindersScreen'},
@@ -23,6 +24,7 @@ const drawerItems = () => [
   {title: 'Settings', screen: 'Subscription'},
   {title: 'Audio Record', screen: 'AudioRecord'},
   {title: 'Report Story', screen: 'ReportStory'},
+  {title: 'Complaints/Suggestions', screen: 'ReportConplaint'},
   // {title: 'About Us', screen: 'AboutUs'},
   // {title: 'Privacy y', screen: 'PrivacyPolicy'},
   // {title: 'Terms of', screen: 'TermsOfUse'},
@@ -38,9 +40,9 @@ const renderListItem = (data: any, props: any) => {
           props.navigation.navigate(data.item.screen);
         }}
         style={styles.rowStyle}>
-        <Image
+        <FastImage
           source={ImageAssets.androidW}
-          resizeMode="contain"
+          resizeMode={FastImage.resizeMode.contain}
           style={styles.img}
         />
         <Text style={{color: globalColors.white, fontSize: 16, marginLeft: 30}}>
@@ -116,9 +118,9 @@ export class CustomDrawerContentComponent extends Component<
                     logout(this.props);
                   }}
                   style={styles.rowStyle}>
-                  <Image
+                  <FastImage
                     source={ImageAssets.androidW}
-                    resizeMode="contain"
+                    resizeMode={FastImage.resizeMode.contain}
                     style={styles.img}
                   />
                   <Text
