@@ -14,7 +14,7 @@
   "dependencies": {
     "@react-native-community/async-storage": "^1.10.0",
     "@react-native-community/masked-view": "^0.1.10",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "hermesvm": "^0.1.1",
     "i": "^0.3.7",
     "jsc-android": "^241213.1.0",
