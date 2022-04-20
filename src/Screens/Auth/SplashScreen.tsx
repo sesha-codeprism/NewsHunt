@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {GLOBALS} from '../../utils/globals';
 import {Log} from '../../utils/helper';
 import Permissions from 'react-native-permissions';
+import FastImage from 'react-native-fast-image';
 
 export interface SplashScreenProps extends NavigationStackScreenProps {}
 
@@ -61,10 +62,10 @@ export default class SplashScreen extends React.Component<
 
   public render() {
     return (
-      <ImageBackground
+      <FastImage
         source={ImageAssets.splashBG}
         resizeMode="cover"
-        style={styles.mainContainer}></ImageBackground>
+        style={styles.mainContainer}></FastImage>
     );
   }
 }

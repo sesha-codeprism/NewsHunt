@@ -137,7 +137,7 @@ export default class SignUpScreen extends React.Component<
 
   public render() {
     return (
-      <ImageBackground
+      <FastImage
         source={ImageAssets.smallLoginBG}
         resizeMode="cover"
         style={styles.imageBG}>
@@ -340,7 +340,7 @@ export default class SignUpScreen extends React.Component<
             </View>
           </View>
         </KeyboardAvoidingView>
-      </ImageBackground>
+      </FastImage>
     );
   }
 }

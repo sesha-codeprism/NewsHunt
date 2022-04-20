@@ -126,14 +126,13 @@ export default class NewsCategories extends React.Component<
                       },
                     ]}
                     key={`Index${index}`}>
-                    <Image
+                    <FastImage
                       source={
                         item.imageURI !== null || item.imageURI !== ''
                           ? item.imageURI
                           : ImageAssets.placeholder
                       }
                       resizeMode="cover"
-                      resizeMethod="auto"
                       style={styles.imageStyles}
                     />
                     <View style={styles.categoryHeader}>

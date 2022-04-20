@@ -23,9 +23,7 @@ import ImagePicker from 'react-native-customized-image-picker';
 import {Picker} from '@react-native-community/picker';
 import API from '../../API/api';
 import {onCatch} from '../../utils/helper';
-import {categoriesObject} from 'src/@types/categoriesObject';
 import {GLOBALS} from '../../utils/globals';
-import FastImage from 'react-native-fast-image';
 
 var FormData = require('form-data');
 
@@ -45,9 +43,6 @@ export interface ReportStoryState {
   imageList: Array<any>;
   videoURL: string;
   image: any;
-  categories: categoriesObject[];
-  categoryItem: categoriesObject | any;
-  categoryId: number;
 }
 
 const {width, height} = Dimensions.get('window');
@@ -77,27 +72,8 @@ export default class ReportStory extends React.Component<
       imageList: [],
       videoURL: '',
       image: '',
-      categories: [],
-      categoryId: 0,
-      categoryItem: '',
     };
   }
-  componentDidMount() {
-    this.getCategories();
-  }
-  getCategories = () => {
-    GLOBALS.activityIndicator.show();
-    API.getCategories()
-      .then(({data}) => {
-        // console.log(data);
-        this.setState({
-          categories: data,
-          categoryItem: data[0],
-        });
-        GLOBALS.activityIndicator.hide();
-      })
-      .catch((err) => onCatch(err, 'Getting categories'));
-  };
 
   showPicker = () => {
     return Platform.OS !== 'ios' ? (
@@ -196,8 +172,7 @@ export default class ReportStory extends React.Component<
         name: item.filename || name,
       });
     });
-    formData.append('ncate', this.state.categoryItem.cid);
-    formData.append('posttype', this.state.categoryItem.id);
+
     formData.append('ntitle', this.state.titleText);
     formData.append('ntext', this.state.content);
     formData.append('nmtype', 'image');
@@ -245,12 +220,6 @@ export default class ReportStory extends React.Component<
     const {
       state: {titleBoxHeight, imageList},
     } = this;
-    console.log(
-      'Picker name',
-      this.state.categoryItem.cname,
-      'Value',
-      this.state.categoryItem.cid,
-    );
     return (
       <GoSafe hideStatusBar>
         <View style={styles.main}>
@@ -260,7 +229,7 @@ export default class ReportStory extends React.Component<
               onPress={() => {
                 this.props.navigation.openDrawer();
               }}>
-              <FastImage source={ImageAssets.menu} style={styles.img} />
+              <Image source={ImageAssets.menu} style={styles.img} />
             </TouchableOpacity>
             <Text style={styles.headerText}>News Hunt</Text>
           </View>
@@ -301,7 +270,7 @@ export default class ReportStory extends React.Component<
                             this.selectImage(index);
                           }}
                           key={`Index${index}`}>
-                          <FastImage
+                          <Image
                             source={ImageAssets.placeholder}
                             style={styles.imageStyles}
                           />
@@ -315,59 +284,13 @@ export default class ReportStory extends React.Component<
                             this.selectImage(index);
                           }}
                           key={`Index${index}`}>
-                          <FastImage
+                          <Image
                             source={{uri: imageList[index].path}}
                             style={styles.imageStyles}
                           />
                         </TouchableOpacity>
                       );
                     })}
-              </View>
-              <View style={styles.boxControl}>
-                {Platform.OS !== 'ios' ? (
-                  <Picker
-                    mode="dropdown"
-                    selectedValue={this.state.categoryItem.cname}
-                    style={{
-                      height: '100%',
-                      width: '100%',
-                      color: 'white',
-                      backgroundColor: globalColors.darkGrey,
-                    }}
-                    onValueChange={(value, itemIndex: number) => {
-                      this.setState({
-                        categoryItem: this.state.categories[itemIndex],
-                      });
-                    }}>
-                    {this.state.categories.map((item, index) => {
-                      return (
-                        <Picker.Item
-                          key={`Item${index}`}
-                          label={item.cname}
-                          value={item.cname}></Picker.Item>
-                      );
-                    })}
-                  </Picker>
-                ) : (
-                  <TouchableOpacity
-                    onPress={() => {
-                      ActionSheetIOS.showActionSheetWithOptions(
-                        {
-                          options: [...this.state.categories, 'Cancel'],
-                          cancelButtonIndex: this.state.categories.length,
-                        },
-                        (buttonIndex) => {
-                          this.setState({
-                            categoryItem: this.state.categories[buttonIndex],
-                          });
-                        },
-                      );
-                    }}>
-                    <Text style={styles.textInputText}>
-                      {this.state.categoryItem.cname}
-                    </Text>
-                  </TouchableOpacity>
-                )}
               </View>
               <Text style={[styles.labelText, {marginTop: height * 0.1}]}>
                 Tap on Image to upload a video
@@ -377,7 +300,7 @@ export default class ReportStory extends React.Component<
                   onPress={() => {
                     this.selectVideo();
                   }}>
-                  <FastImage
+                  <Image
                     source={
                       this.state.videoURL !== ''
                         ? {uri: this.state.videoURL}
@@ -570,7 +493,7 @@ const styles = StyleSheet.create({
   },
   rowStyles: {
     flexDirection: 'row',
-    height: 80,
+    height: 100,
     margin: 5,
     flexWrap: 'wrap',
   },
@@ -578,29 +501,5 @@ const styles = StyleSheet.create({
     height: 50,
     width: 50,
     margin: 10,
-  },
-  boxControl: {
-    margin: 10,
-    height: 40,
-    width: '80%',
-    borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 5,
-    borderWidth: 1,
-    borderColor: globalColors.primary,
-    backgroundColor: globalColors.darkGrey,
-    paddingHorizontal: 10,
-    marginTop: 60,
-  },
-  textInputText: {
-    fontSize: 16,
-    width: '100%',
-    height: '100%',
-    paddingLeft: 10,
-    color: 'white',
-    textAlign: 'center',
-    alignSelf: 'center',
-    marginTop: 5,
   },
 });

@@ -215,15 +215,7 @@ export default class LoginScreen extends React.Component<
               </View>
               <View style={styles.rightContainer}>
                 <TouchableOpacity
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginLeft: -30,
-                    height: 50,
-                    width: 120,
-                    backgroundColor: globalColors.themeBlue,
-                  }}
+                  style={styles.loginButtonStyles}
                   onPress={() => {
                     this.onLogin();
                   }}>
@@ -331,5 +323,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     alignSelf: 'center',
     marginTop: 5,
+  },
+  loginButtonStyles: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    // alignSelf: 'center',
+    // marginLeft: -30,
+    height: 50,
+    width: 120,
+    borderRadius: 30,
+    backgroundColor: globalColors.themeBlue,
   },
 });
